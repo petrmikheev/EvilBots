@@ -1,0 +1,184 @@
+fileFormatVersion: 2
+guid: bd01ce2a9444c4d20adf63549b7ea1d3
+timeCreated: 1504551864
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Box01
+    100002: Gun
+    100004: Kreplenie
+    100006: //RootNode
+    100008: Turret
+    100010: wh1
+    100012: wh2
+    100014: wh3
+    100016: wh4
+    400000: Box01
+    400002: Gun
+    400004: Kreplenie
+    400006: //RootNode
+    400008: Turret
+    400010: wh1
+    400012: wh2
+    400014: wh3
+    400016: wh4
+    2100000: Box01Mat
+    2100002: GunMat
+    2100004: KreplenieMat
+    2100006: TurretMat
+    2100008: wh1Mat
+    2100010: wh2Mat
+    2100012: wh3Mat
+    2100014: wh4Mat
+    2300000: Box01
+    2300002: Gun
+    2300004: Kreplenie
+    2300006: Turret
+    2300008: wh1
+    2300010: wh2
+    2300012: wh3
+    2300014: wh4
+    3300000: Box01
+    3300002: Gun
+    3300004: Kreplenie
+    3300006: Turret
+    3300008: wh1
+    3300010: wh2
+    3300012: wh3
+    3300014: wh4
+    4300000: Box01
+    4300002: Gun
+    4300004: Kreplenie
+    4300006: Turret
+    4300008: wh1
+    4300010: wh2
+    4300012: wh3
+    4300014: wh4
+    6400000: Box01
+    6400002: Gun
+    6400004: Kreplenie
+    6400006: Turret
+    6400008: wh1
+    6400010: wh2
+    6400012: wh3
+    6400014: wh4
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Box01Mat
+    second: {fileID: 2100000, guid: 905cb6c9236274f7ab64d0fc665541bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GunMat
+    second: {fileID: 2100000, guid: 905cb6c9236274f7ab64d0fc665541bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: KreplenieMat
+    second: {fileID: 2100000, guid: 905cb6c9236274f7ab64d0fc665541bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: TurretMat
+    second: {fileID: 2100000, guid: 905cb6c9236274f7ab64d0fc665541bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wh1Mat
+    second: {fileID: 2100000, guid: 905cb6c9236274f7ab64d0fc665541bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wh2Mat
+    second: {fileID: 2100000, guid: 905cb6c9236274f7ab64d0fc665541bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wh3Mat
+    second: {fileID: 2100000, guid: 905cb6c9236274f7ab64d0fc665541bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wh4Mat
+    second: {fileID: 2100000, guid: 905cb6c9236274f7ab64d0fc665541bb, type: 2}
+  materials:
+    importMaterials: 1
+    autoMapExternalMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.0045
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,185 @@
+<size=20><b>Введение</b></size>
+
+    <b>EvilBots</b> - это игра для программистов. Вам предлагается разработать ИИ для вооруженной пулемётом машинки (бота) и наблюдать за его сражениями с другими ИИ. Конечно, есть и режим ручного управления, но его функция вторична.
+
+    <b>От автора:</b> Считаю необходимым отметить, что основная идея, правила и часть игровых ресурсов были позаимствованы мной из игры <b>SmartBots</b> (https://github.com/asfdfdfd/SmartBots/). К сожалению, этот проект уже давно заброшен, так что я решил создать свою версию.
+
+<size=20><b>Язык программирования ИИ</b></size>
+
+    В <b>EvilBots</b> ИИ - это фрагмент кода на Си-подобном языке. Чем короче код, тем чаще он будет вызываться (максимум - 50 раз в секунду).
+    Написанные пользователем ИИ будут храниться в каталоге ai_src. В сборках для Windows и Linux каталог ai_src находится рядом с исполняемым файлом. В сборке для Mac OS каталог ai_src находится внутри EvilBots.app. Обратите внимание: при переходе на новую версию EvilBots, чтобы не потерять данные, нужно скопировать ai_src из старой версии.
+    Откомпилированные ИИ хранятся в ai_bin. Если вы хотите посоревноваться с друзьями, не показывая исходный код - обменяйтесь файлами из ai_bin.
+
+<b>Переменные</b>
+
+Поддерживаются типы данных:
+    <b>*</b> <color=teal>float</color> - действительные числа (4 байта)
+    <b>*</b> <color=teal>vector</color> - 3д вектора (12 байт)
+    <b>*</b> <color=teal>int</color> - целые числа (4 байта)
+    <b>*</b> <color=teal>bool</color> - true/false (4 байта)
+
+Глобальные переменные сохраняют свои значения между разными вызовами ИИ (если, конечно, они не проинициализированы при определении).
+Единственный способ отладки - посмотреть значения глобальных переменных в процессе игры. Чтобы переменная отображалась, при объявлении нужно указать модификатор <color=blue>visible</color> (разрешен только для глобальных переменных). Например:
+<color=blue>visible</color> <color=teal>int</color> x;
+
+Для объявления констант стоит использовать #define, например:
+<color=grey>#define</color> SIZE 20
+
+Массивы могут быть только статическими. Массивы не могут инициализироваться при создании. Пример:
+<color=blue>visible</color> <color=teal>vector</color> data[SIZE];
+data[0] = <color=teal>vector</color>(1, 2, 3);
+data[1].x = 4; data[1].y = 5; data[1].z = 6;
+
+Символов и строк нет. Структур нет. Указателей тоже нет. Ограничение на используемую глобальными переменными память - 64МБ.
+
+<b>Функции</b>
+
+Функции могут объявляться как до, так и после основного кода. Допустимы рекурсивные вызовы. Максимальный размер стека - 64МБ.
+
+Пример:
+
+<color=teal>int</color> x = 5;
+<color=teal>void</color> f(<color=teal>int</color> y) { x += y; }
+<color=teal>int</color> g(int x, int y);
+
+f(3);
+x += g(4, 5);
+
+<color=teal>int</color> g(<color=teal>int</color> x, <color=teal>int</color> y) { <color=blue>return</color> x*y; }
+
+Передать параметр по ссылке нельзя.
+
+<b>Арифметические операторы</b>
+
+Доступны все арифметические операторы Си, кроме побитовых.
+Для векторов поддерживается сложение, вычитание и умножение/деление на число. Для остальных операций с векторами следует использовать встроенные функции (список приведен ниже).
+
+<b>Циклы и условия</b>
+
+Поддерживаются конструкции:
+<color=blue>if</color> (...) { ... } <color=blue>else</color> { ... }
+<color=blue>for</color> (...) { ... }
+<color=blue>while</color> (...) { ... }
+
+<b>Комментарии</b>
+
+<color=grey>// Однострочный комментарий
+
+/*
+    Многострочный комментарий
+*/</color>
+
+<size=20><b>Встроенные переменные и функции</b></size>
+
+<b>Управление движением и стрельбой</b>
+
+Управление движением и стрельбой осуществляется через встроенные переменные. Если вы меняете значение управляющей переменной (например, <color=green>move</color> = 1), то это подействует (двигатель включится) только после выполнения кода ИИ до конца.
+
+    <b>*</b> <color=green>move</color> (float, от -1.0 до 1.0) - управление двигателем; положительное - вперед, отрицательное - назад.
+    <b>*</b> <color=green>turnCorpus</color> (float, от -1.0 до 1.0) - управление поворотом; положительное - направо.
+    <b>*</b> <color=green>turnTurret</color> (float, от -1.0 до 1.0) - управление горизонтальным поворотом пушки
+    <b>*</b> <color=green>turnGun</color> (float, от -1.0 до 1.0) - управление наклоном ствола (положительное - двигать вверх, отрицательное - вниз)
+    <b>*</b> <color=green>fire1</color> (bool) - стрелять или не стрелять
+    <b>*</b> <color=green>fire2</color> (bool) - запуск самонаводящейся ракеты
+
+Все остальные переменные доступны только для чтения.
+
+<b>Информация о собственном состоянии</b>
+
+    <b>*</b> <color=green>justStarted</color> (bool) - установлена в true только при первом проходе после начала раунда (для инициализации)
+    <b>*</b> <color=green>justSpawned</color> (bool) - установлена в true при первом проходе после респауна (в том числе в самом начале раунда)
+    <b>*</b> <color=green>runTime</color> (float) - время (в секундах) выполнения кода ИИ на предыдущем проходе
+    <b>*</b> <color=green>deltaTime</color> (float) - время (в секундах) между началом предыдущего и началом этого прохода
+    <b>*</b> <color=green>runtimeError</color> (bool) - установлена в true, если на предыдущем проходе произошла ошибка выполнения
+
+    <b>*</b> <color=green>lives</color> (int) - количество жизней
+    <b>*</b> <color=green>bullets</color> (int) - количество патронов
+    <b>*</b> <color=green>rockets</color> (int) - количество ракет
+    
+    <b>*</b> <color=green>position</color> (vector) - текущее положение в пространстве (координаты центра масс)
+    <b>*</b> <color=green>gunPosition</color> (vector) - координаты конца ствола
+    <b>*</b> <color=green>velocity</color> (vector) - вектор скорости
+    
+    <b>*</b> <color=green>corpusDirection</color> (vector) - вектор направления корпуса
+    <b>*</b> <color=green>gunDirection</color> (vector) - вектор направления ствола
+    <b>*</b> <color=green>upwardDirection</color> (vector) - направление вверх (если оно получается вниз - вы перевернулись)
+
+    <b>*</b> <color=green>collision</color> (bool) - было ли столкновение с препятствием
+    <b>*</b> <color=green>collisionPosition</color> (vector) - точка соприкосновения с препятствием (если <color=green>collision</color>=true)
+
+<b>Общая информация</b>
+
+    <b>*</b> <color=green>gravity</color> (float) - ускорение свободного падения
+    <b>*</b> <color=green>firingVelocity</color> (bool) - начальная скорость при выстреле
+    <b>*</b> <color=green>remainingTime</color> (float) - время (в секундах) до конца раунда
+    <b>*</b> <color=green>totalBotsCount</color> (bool) - общее количество ботов в этом раунде
+
+<b>Управление лидаром</b>
+
+С помощью лидара можно определять расстояние до препятствий. Лидар работает со скоростью 200 замеров в секунду. Если делать замеры слишком часто (т.е. больше 4-х раз за проход), ИИ будет работать медленнее и реагировать с задержкой.
+
+Функция сканирования в указанном направлении:
+    <b>*</b> float <color=blue>scanObstacle</color>(vector direction) - возвращается расстояние до препятствия или 1E9 (1000000000.0), если в этом направлении препятствия нет.
+
+При каждом вызове функции устанавливаются значения следующих переменных:
+    <b>*</b> <color=green>obstacleDistance</color> (float) - расстояние до препятствия при последнем сканировании (совпадает с возвращаемым значением в последнем вызове <color=blue>scanObstacle</color>)
+    <b>*</b> <color=green>obstaclePosition</color> (vector) - точка пересечения луча лидара с препятствием при последнем сканировании
+    <b>*</b> <color=green>obstacleNormal</color> (vector) - нормаль к препятствию
+
+<b>Обработка информации с камеры</b>
+
+Камера автоматически детектирует объекты, определяет их тип, координаты и скорость. Камера поворачивается вместе с пушкой.
+
+    <b>*</b> <color=green>visibleObjectsCount</color> (int) - переменная; количество видимых в данный момент времени объектов
+
+Информацию о видимых объектах можно получить следующими функциями:
+    <b>*</b> int <color=blue>objType</color>(int) - возвращает тип объекта с указанным номером (номер от 0 до objCount-1)
+            Возращаемое значение:
+                0 (константа NONE) - объект не существует (возвращается если указанный номер не попадает в диапазон от 0 до objCount-1)
+                1 (константа ENEMY) - противник
+                2 (константа BULLET_BONUS) - бонус "патроны"
+                3 (константа ROCKET_BONUS) - бонус "ракета"
+                4 (константа REPAIR_BONUS) - бонус "ремонт"
+                5 (константа BULLET) - летящий снаряд
+                6 (константа ROCKET) - летящая ракета
+    <b>*</b> vector <color=blue>objPosition</color>(int) - координаты указанного объекта
+    <b>*</b> vector <color=blue>objVelocity</color>(int) - скорость указанного объекта
+    <b>*</b> float <color=blue>objDistance</color>(int) - расстояние до указанного объекта
+    <b>*</b> vector <color=blue>objDirection</color>(int) - ориентация указанного бота (только для типа ENEMY)
+    <b>*</b> vector <color=blue>objGunDirection</color>(int) - направление ствола у указанного бота (только для типа ENEMY)
+
+<b>Векторные функции</b>
+
+    <b>*</b> vector <color=teal>vector</color>(float x, float y, float z) - построить вектор из скалярных значений
+    <b>*</b> float <color=blue>length</color>(vector) - модуль вектора
+    <b>*</b> vector <color=blue>normalize</color>(vector) - нормированный вектор
+    <b>*</b> float <color=blue>dot</color>(vector, vector) - скалярное произведение
+    <b>*</b> vector <color=blue>cross</color>(vector, vector) - векторное произведение
+    <b>*</b> vector <color=blue>rotateRight</color>(vector, float angle) - поворот вектора по горизонтали вправо на заданный угол (в градусах)
+    <b>*</b> vector <color=blue>rotateUp</color>(vector, float angle) - поворот вектора вверх на заданный угол (в градусах)
+    <b>*</b> float <color=blue>angleHorizontal</color>(vector from, vector to) - угол между двумя векторами по горизонтали (отсчитывается вправо, в градусах)
+    <b>*</b> float <color=blue>angleVertical</color>(vector from, vector to) - угол между двумя векторами по вертикали (отсчитывается вверх, в градусах)
+
+<b>Математические функции</b>
+
+    <b>*</b> M_PI - число Пи (константа)
+    <b>*</b> M_E - число E (константа)
+    <b>*</b> float <color=blue>abs</color>(float) - модуль
+    <b>*</b> float <color=blue>min</color>(float, float) - минимум
+    <b>*</b> float <color=blue>max</color>(float, float) - максимум
+    <b>*</b> int <color=blue>round</color>(float) - округление к ближайшему целому
+    <b>*</b> int <color=blue>floor</color>(float) - округление вниз
+    <b>*</b> int <color=blue>ceil</color>(float) - округление вверх
+    <b>*</b> float <color=blue>sqrt</color>(float) - квадратный корень
+    <b>*</b> float <color=blue>sin</color>(float) - синус
+    <b>*</b> float <color=blue>cos</color>(float) - косинус
+    <b>*</b> float <color=blue>asin</color>(float) - арксинус
+    <b>*</b> float <color=blue>acos</color>(float) - арккосинус
+    <b>*</b> float <color=blue>atan2</color>(float, float) - функция atan2
+    <b>*</b> float <color=blue>exp</color>(float) - экспонента
+    <b>*</b> float <color=blue>log</color>(float) - логарифм
+    <b>*</b> float <color=blue>randomFloat</color>(float l, float r) - случайное действительное число в диапазоне от l до r
+    <b>*</b> int <color=blue>randomInt</color>(int l, int r) - случайное целое число в диапазоне от l до r, не включая r
+
+<size=20><b>Пример ИИ (бот Demo)</b></size>
+

@@ -1,0 +1,185 @@
+<size=20><b>Introduction</b></size>
+
+    <b>EvilBots</b> - is a game for programmers. You are to develop an AI for a battle car and to watch your car fight other AIs. Of course, there is also a manual control mode, but it is not a main function.
+
+    <b>Creator's note:</b> I believe it is necessary to mention, that the main idea, the rules and some game resources were borrowed from <b>SmartBots</b>. (https://github.com/asfdfdfd/SmartBots/). Unfortunately, this project has been abandoned for a long time already, so I decided to make my own version.
+
+<size=20><b>Programming language for AI</b></size>
+
+    In <b>EvilBots</b> an AI is a piece of code in a C-like language. The shorter the code, the more often it is invoked (50 times a second is a maximum).
+    The AIs written by the user is stored in ai_src folder. In Windows and Linux builds ai_src is in the same folder as the run file. In the Mac OS build the ai_src folder is inside EvilBots.app. Note: when switching to a new EvilBots version you need to compile ai_src from the old one in order to not lose the data.
+    The compiled AIs are stored in ai_bin. If you want to compete with your friends without showing the source code - exchange your files from ai_bin. 
+
+<b>Variables</b>
+
+There are four datatypes:
+    <b>*</b> <color=teal>float</color> - real number (4 bytes)
+    <b>*</b> <color=teal>vector</color> - 3d vector (12 bytes)
+    <b>*</b> <color=teal>int</color> - integer (4 bytes)
+    <b>*</b> <color=teal>bool</color> - true/false (4 bytes)
+
+Global variables keep their values between the AI invocations (of course, if they are not initialized on definition).
+The only way of debugging is to inspect the values of the global variables during the game. To display the variable, you should specify the <color=blue>visible</color> modifier (allowed only for global variables). For example:
+<color=blue>visible</color> <color=teal>int</color> x;
+
+To declare a constant one may use #define. For example:
+<color=grey>#define</color> SIZE 20
+
+Only static arrays are allowed. An example:
+<color=blue>visible</color> <color=teal>vector</color> data[SIZE];
+data[0] = <color=teal>vector</color>(1, 2, 3);
+data[1].x = 4; data[1].y = 5; data[1].z = 6;
+
+There are no chars, strings, structs and pointers. Memory limit is 64MB.
+
+<b>Functions</b>
+
+Functions can be declared both before and after the main code. Recursive calls are allowed. Max stack size is 64MB.
+
+An example:
+
+<color=teal>int</color> x = 5;
+<color=teal>void</color> f(<color=teal>int</color> y) { x += y; }
+<color=teal>int</color> g(int x, int y);
+
+f(3);
+x += g(4, 5);
+
+<color=teal>int</color> g(<color=teal>int</color> x, <color=teal>int</color> y) { <color=blue>return</color> x*y; }
+
+Output parameters are not allowed.
+
+<b>Arithmetic operators</b>
+
+All C arithmetical operators except bitwise are supported.
+For vectors there are addition, substruction and multiplication/division by a number. For other vector operations one may use internal functions (see the list below).
+
+<b>Loops and conditions</b>
+
+The following constructions are available:
+<color=blue>if</color> (...) { ... } <color=blue>else</color> { ... }
+<color=blue>for</color> (...) { ... }
+<color=blue>while</color> (...) { ... }
+
+<b>Comments</b>
+
+<color=grey>// Single line comment
+
+/*
+    Multiline comment
+*/</color>
+
+<size=20><b>Built-in variables and functions</b></size>
+
+<b>Movement and shooting control</b>
+
+The movement and shooting control is carried out through built-in variables. If you change the value of the control variable (for instance, <color=green>move</color> = 1), this will be brought into action (the engine will turn on) only after the execution of the AI code up to the end.
+
+    <b>*</b> <color=green>move</color> (float, от -1.0 до 1.0) - engine control; positive - drive forward, negative - drive backward.
+    <b>*</b> <color=green>turnCorpus</color> (float, от -1.0 до 1.0) - steering wheel control; positive - right turn, negative - left turn.
+    <b>*</b> <color=green>turnTurret</color> (float, от -1.0 до 1.0) - point the gun along the horizontal axis (positive is to right)
+    <b>*</b> <color=green>turnGun</color> (float, от -1.0 до 1.0) - point the gun along the vertical axis (positive is upward)
+    <b>*</b> <color=green>fire1</color> (bool) - shoot
+    <b>*</b> <color=green>fire2</color> (bool) - launch a rocket
+
+All the other variables are read only.
+
+<b>Player's position and state</b>
+
+    <b>*</b> <color=green>justStarted</color> (bool) - 'true' means that it is the first AI invocation after the beginning of the round
+    <b>*</b> <color=green>justSpawned</color> (bool) - 'true' means that it is the first AI invocation after respawn or after the beginning of the round
+    <b>*</b> <color=green>runTime</color> (float) - the time (seconds) that previous AI invocation took
+    <b>*</b> <color=green>deltaTime</color> (float) - the time (seconds) between previous and current invocations
+    <b>*</b> <color=green>runtimeError</color> (bool) - 'true' means that there was a runtime error on the previous pass
+
+    <b>*</b> <color=green>lives</color> (int) - lives count
+    <b>*</b> <color=green>bullets</color> (int) - bullets count
+    <b>*</b> <color=green>rockets</color> (int) - rockets count
+    
+    <b>*</b> <color=green>position</color> (vector) - current position
+    <b>*</b> <color=green>gunPosition</color> (vector) - position of the gun end
+    <b>*</b> <color=green>velocity</color> (vector) - velocity vector
+    
+    <b>*</b> <color=green>corpusDirection</color> (vector) - forward direction of the car hull
+    <b>*</b> <color=green>gunDirection</color> (vector) - direction of the gun
+    <b>*</b> <color=green>upwardDirection</color> (vector) - upward direction of the car hull
+
+    <b>*</b> <color=green>collision</color> (bool) - are we collided right now or not (true/false)
+    <b>*</b> <color=green>collisionPosition</color> (vector) - collision point (if <color=green>collision</color>=true)
+
+<b>General information</b>
+
+    <b>*</b> <color=green>gravity</color> (float) - acceleration of gravity
+    <b>*</b> <color=green>firingVelocity</color> (bool) - initial velocity of bullets
+    <b>*</b> <color=green>remainingTime</color> (float) - time (seconds) to the end of the round
+    <b>*</b> <color=green>totalBotsCount</color> (bool) - total number of bots in this round
+
+<b>Lidar</b>
+
+Lidar can determine the distance to obstacles. Lidar operates at a rate of 200 measurements per second. If you take measurements too often (ie, more than 4 times per pass), the AI will work slower and react with a delay.
+
+A function to scan in the specified direction:
+    <b>*</b> float <color=blue>scanObstacle</color>(vector direction) - distance to an obstacle or 1E9 (1000000000.0) if there is no obstacle in this direction.
+
+Each scan will change the following variables:
+    <b>*</b> <color=green>obstacleDistance</color> (float) - distance to an obstacle (is the same as <color=blue>scanObstacle</color> return value)
+    <b>*</b> <color=green>obstaclePosition</color> (vector) - point of intersection of a lidar ray with an obstacle
+    <b>*</b> <color=green>obstacleNormal</color> (vector) - the normal to the obstacle
+
+<b>Camera</b>
+
+The camera automatically detects objects, determines their type, coordinates and speed. The camera rotates along with the gun.
+
+    <b>*</b> <color=green>visibleObjectsCount</color> (int) - number of objects in the scope of the camera (at the moment)
+
+Information on visible objects can be obtained by the following functions:
+    <b>*</b> int <color=blue>objType</color>(int) - returns type of the object with the specified number (parameter should be from 0 to objCount-1)
+            Return value:
+                0 (constant NONE) - the object doesn't exist (if parameter is less than 0 or greater than objCount-1)
+                1 (constant ENEMY) - an enemy bot
+                2 (constant BULLET_BONUS) - a bonus "bullets"
+                3 (constant ROCKET_BONUS) - a bonus "rocket"
+                4 (constant REPAIR_BONUS) - a bonus "repair"
+                5 (constant BULLET) - flying bullet
+                6 (constant ROCKET) - flying rocket
+    <b>*</b> vector <color=blue>objPosition</color>(int) - position of the specified object
+    <b>*</b> vector <color=blue>objVelocity</color>(int) - velocity of the specified object
+    <b>*</b> float <color=blue>objDistance</color>(int) - distance to the specified object
+    <b>*</b> vector <color=blue>objDirection</color>(int) - orientation of the bot (only for the type ENEMY)
+    <b>*</b> vector <color=blue>objGunDirection</color>(int) - direction of the gun of the bot (only for the type ENEMY)
+
+<b>Vector functions</b>
+
+    <b>*</b> vector <color=teal>vector</color>(float x, float y, float z) - to construct vector from scalar values
+    <b>*</b> float <color=blue>length</color>(vector) - vector length
+    <b>*</b> vector <color=blue>normalize</color>(vector) - normalized vector
+    <b>*</b> float <color=blue>dot</color>(vector, vector) - dot product
+    <b>*</b> vector <color=blue>cross</color>(vector, vector) - cross product
+    <b>*</b> vector <color=blue>rotateRight</color>(vector, float angle) - rotate the vector to the right (degrees)
+    <b>*</b> vector <color=blue>rotateUp</color>(vector, float angle) - rotate the vector upward (degrees)
+    <b>*</b> float <color=blue>angleHorizontal</color>(vector from, vector to) - the horizontal angle between two vectors (positive direction is to the right; degrees)
+    <b>*</b> float <color=blue>angleVertical</color>(vector from, vector to) - the vertical angle between two vectors (upward; degrees)
+
+<b>Math functions</b>
+
+    <b>*</b> M_PI - Pi (constant)
+    <b>*</b> M_E - the base of the natural logarithm (constant)
+    <b>*</b> float <color=blue>abs</color>(float) - absolute value
+    <b>*</b> float <color=blue>min</color>(float, float) - minimum
+    <b>*</b> float <color=blue>max</color>(float, float) - maximum
+    <b>*</b> int <color=blue>round</color>(float) - round to the nearest
+    <b>*</b> int <color=blue>floor</color>(float) - round downward
+    <b>*</b> int <color=blue>ceil</color>(float) - round upward
+    <b>*</b> float <color=blue>sqrt</color>(float) - square root
+    <b>*</b> float <color=blue>sin</color>(float) - sinus
+    <b>*</b> float <color=blue>cos</color>(float) - cosinus
+    <b>*</b> float <color=blue>asin</color>(float) - arcsinus
+    <b>*</b> float <color=blue>acos</color>(float) - arccosinus
+    <b>*</b> float <color=blue>atan2</color>(float, float) - atan2 function
+    <b>*</b> float <color=blue>exp</color>(float) - exponent
+    <b>*</b> float <color=blue>log</color>(float) - logarithm
+    <b>*</b> float <color=blue>randomFloat</color>(float l, float r) - random float from l to r
+    <b>*</b> int <color=blue>randomInt</color>(int l, int r) - random integer from l (including) to r (excluding)
+
+<size=20><b>AI example (Demo)</b></size>
+
